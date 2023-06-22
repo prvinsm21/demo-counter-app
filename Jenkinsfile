@@ -73,7 +73,6 @@ pipeline {
                     withCredentials([usernameColonPassword(credentialsId: '507c49df-3053-4069-a545-23ccdda3935d', variable: 'dockerhub-cred')])  {
                         
                         sh 'docker image push prvinsm21/cicd-proj2:v1.$BUILD_ID'
-                        sh 'docker image push prvinsm21/cicd-proj2:latest'
                     }
                 }
             }
