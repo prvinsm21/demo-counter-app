@@ -42,6 +42,7 @@ pipeline {
             steps {
                 script {
                     def readPomVersion = readMavenPom file: 'pom.xml'
+                    def nexusRepo = readMavenPom.version.endsWith("SNAPSHOT") ? "CICD-Proj2-snapshot" : "CICD-Proj2-release"
                     nexusArtifactUploader artifacts: [
                         [
                             artifactId: 'springboot', classifier: '', file: 'target/Uber.jar', type: 'jar'
@@ -52,7 +53,7 @@ pipeline {
                         nexusUrl: '192.168.29.38:8081/', 
                         nexusVersion: 'nexus3', 
                         protocol: 'http', 
-                        repository: 'CICD-Proj2-release', 
+                        repository: nexusRepo, 
                         version: "${readPomVersion.version}"
                 }
             }
