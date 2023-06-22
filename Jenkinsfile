@@ -25,7 +25,7 @@ pipeline {
         stage ('Static Code analysis') {
             steps {
                 script {
-                withSonarQubeEnv(credentialsId: '39979d53-e7d5-45f8-8edf-7c5fa3d5d78f') {
+                withSonarQubeEnv(credentialsId: 'sonar-api') {
                 sh 'mvn clean package sonar:sonar'
             }
             }
@@ -34,7 +34,7 @@ pipeline {
         stage ('Quality Gate status') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: '39979d53-e7d5-45f8-8edf-7c5fa3d5d78f'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-api'
                 }
             }
         }
