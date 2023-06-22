@@ -70,6 +70,7 @@ pipeline {
         stage ('Push image to DockerHub') {
             steps {
                 script {
+                        sh 'docker tag cicd-proj2 prvinsm21/cicd-proj2'
                         sh 'docker image push prvinsm21/cicd-proj2:v1.$BUILD_ID'
                     }
                 }
