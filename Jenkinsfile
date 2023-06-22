@@ -67,5 +67,16 @@ pipeline {
                 }
             }
         }
+        stage ('Push image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhub-cred', variable: 'dockerhub-cred')]) {
+                        sh 'docker login -u prvinsm21 -p ${dockerhub-cred}'
+                        sh 'docker image push prvinsm21/cicd-proj2:v1.$BUILD_ID'
+                        sh 'docker image push prvinsm21/cicd-proj2:latest'
+                    }
+                }
+            }
+        }
     }
 }
