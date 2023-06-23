@@ -88,7 +88,6 @@ pipeline {
                 }
             }
        
-        }
         stage ('Delete Docker images') {
             steps {
                 script {
