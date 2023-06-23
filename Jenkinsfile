@@ -110,6 +110,7 @@ pipeline {
                     }
                     if (apply) {
                         sh """
+                            su macko
                             kubectl apply -f .
                         """;
                     }
