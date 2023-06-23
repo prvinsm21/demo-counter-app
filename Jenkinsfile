@@ -96,5 +96,25 @@ pipeline {
                 }
             }
         }
+        stage ('Deployment stage') {
+            steps {
+                script {
+                    def apply = false
+                    try {
+                        input message: 'Please confirm the apply to initiate the Deployment',ok: 'Ready to apply the config.'
+                        apply = true
+                    }
+                    catch (err) {
+                        apply = false
+                        CurrentBuild.result = 'UNSTABLE'
+                    }
+                    if (apply) {
+                        sh """
+                            kubectl apply -f .
+                        """;
+                    }
+                }
+            }
+        }
     }
 }
