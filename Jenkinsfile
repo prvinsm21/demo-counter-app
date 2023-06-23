@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_USERNAME = "prvinsm21"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         APP_NAME = "cicd-proj2"
         IMAGE_TAG = "${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
@@ -72,6 +73,12 @@ pipeline {
                 }
             }
         }
+        stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
         stage ('Push image to DockerHub') { 
             steps {
                 script {
