@@ -1,5 +1,12 @@
 pipeline {
     agent any
+    environment {
+        DOCKERHUB_USERNAME = "prvinsm21"
+        APP_NAME = "cicd-proj2"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
+        REGISTRY_CREDS = 'dockerhub'
+    }
 
     stages {
         stage ('Git Checkout') {
@@ -61,20 +68,28 @@ pipeline {
         stage (' Docker image build') {
             steps {
                 script {
-                    sh 'docker image build -t cicd-proj2:v1.$BUILD_ID .'
-                    sh 'docker image tag cicd-proj2:v1.$BUILD_ID prvinsm21/cicd-proj2:v1.$BUILD_ID'
-                    sh 'docker image tag cicd-proj2:v1.$BUILD_ID prvinsm21/cicd-proj2:latest'
+                   docker_image = docker.build "${IMAGE_NAME}" 
                 }
             }
         }
-        stage ('Push image to DockerHub') {
+        stage ('Push image to DockerHub') { 
             steps {
                 script {
-                        sh 'docker tag cicd-proj2 prvinsm21/cicd-proj2'
-                        sh 'docker image push prvinsm21/cicd-proj2:v1.$BUILD_ID'
+                       docker.withRegistry('',REGISTRY_CREDS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
                     }
                 }
             }
        
+        }
+        stage ('Delete Docker images') {
+            steps {
+                script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+                }
+            }
+        }
     }
 }
